@@ -8,9 +8,8 @@ Please run
 
 	main.m
 
-to see the results on several face recognition benchmark datasets.
-
-semmdl.m is the main function calling the SEMMDL algorithm to solve DDL problem
+to see the results on several face recognition benchmark datasets. semmdl.m is the main function 
+calling the SEMMDL algorithm to solve DDL problem
  
 
 ## 'data' folder
