@@ -17,7 +17,7 @@ Extended Yale B(YaleB_DR_DAT.mat) and AR(AR_DR_DAT.mat) datasets are provided.
 
 ## 'large_scale_svm' folder
 
-the toolbox is available online from the original authors 
+The toolbox is available online from the original authors.
 
 ## other
 Any comments or questions, please contact: Chenbo (chenbocqu@163.com)
