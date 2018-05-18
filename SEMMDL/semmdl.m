@@ -1,6 +1,4 @@
-function [ model ] = semmdl( tr_data, trls,tt_dat,ttls, para )
-
-%% 迭代过程中进行测试
+function [ model ] = semmdl( tr_data, trls, tt_dat, ttls, para )
 
 %% copy parameters
 rdim        = para.rdim;        % 降维维度
@@ -16,10 +14,17 @@ if isfield(para,'VERBOSE')
 else
     VERBOSE = false;
 end
+
 if isfield(para,'draw')
     draw    = para.draw;
 else
     draw    = false;
+end
+
+if isfield(para,'tol')
+    tol     = para.tol;
+else
+    tol     = 1e-3;
 end
 
 %% 初始化 投影矩阵P & 字典B
@@ -37,6 +42,8 @@ P_X     = P*X;
 num_class   = length(unique(trls));
 Dini        = [];
 
+%% 初始化字典
+fprintf('Initing Dictionary >>> \n      ');
 for ci = 1:num_class
     
     tr_dat_ci           =    P_X(:,trls==ci);
@@ -52,7 +59,7 @@ for ci = 1:num_class
         fprintf('.');
     end
 end
-fprintf('\n');
+fprintf('\nIniting End ! \n');
 
 %% MMDL
 m           = size(P_X,1);
@@ -86,7 +93,7 @@ Sinit       = zeros(K,n);
 Uinit       = zeros(m,class_num);
 binit       = zeros(1,class_num);
 
-disp('Start algorithm pca-mmdl ... ');
+disp('Start algorithm SEMMDL ... ');
 
 %% 
 k           = 0;
@@ -101,7 +108,7 @@ B           = Dini;
 reco_rates  = []; % 迭代过程中的召回率
 
 %% Start iterating ...
-while  k < Max_iters 
+while  k < Max_iters && rel_deltaD > tol
     
     k=k+1;
     
@@ -144,7 +151,7 @@ while  k < Max_iters
     rel_deltaD  = norm(B(:)-B_pre(:))/norm(B(:));
     
     if  VERBOSE
-    fprintf('\b  relative change of D = %g', rel_deltaD);
+        fprintf('\b  relative change of D = %g', rel_deltaD);
     end
     
     %% step 2 , update Uk bk
@@ -181,7 +188,7 @@ while  k < Max_iters
     
     reco_rates = [reco_rates,reco_rate ];
     
-    fprintf(['SEMMDL :iter = ',num2str(k),'; Test accuracy = ',num2str(roundn(reco_rate*100,-3)), '%; J = ' num2str(j) '.\n']);
+    fprintf(['\nSEMMDL :iter = ',num2str(k),';\nTest accuracy = ',num2str(roundn(reco_rate*100,-3)), '%;\nJ = ', num2str(j) '.\n']);
     
 end
 
